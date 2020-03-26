@@ -16,14 +16,36 @@
 
 package com.zaxxer.hikari.util;
 
+import java.io.Serializable;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.NoSuchElementException;
+import java.util.RandomAccess;
+import java.util.Spliterator;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
+import java.util.function.UnaryOperator;
 
 /**
  * Fast list without range checking.
  *
  * @author Brett Wooldridge
  */
-public final class FastList<T> extends ArrayList<T>
-{
+public final class FastList<T> extends ArrayList<T> {
+   public FastList(int initialCapacity) {
+      super(initialCapacity);
+   }
 
+   public FastList() {
+      super();
+   }
+
+   public FastList(Collection<? extends T> c) {
+      super(c);
+   }
 }

@@ -66,7 +66,7 @@ final class PoolEntry implements IConcurrentBagEntry
       this.isReadOnly = isReadOnly;
       this.isAutoCommit = isAutoCommit;
       this.lastAccessed = currentTime();
-      this.openStatements = new FastList<>(Statement.class, 16);
+      this.openStatements = new FastList<>(16);
    }
 
    /**
