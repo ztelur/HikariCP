@@ -30,7 +30,7 @@
 
    <groupId>com.zaxxer</groupId>
    <artifactId>HikariCP</artifactId>
-   <version>3.4.3-SNAPSHOT</version>
+   <version>3.4.3-test-static</version>
    <packaging>bundle</packaging>
 
    <name>HikariCP</name>

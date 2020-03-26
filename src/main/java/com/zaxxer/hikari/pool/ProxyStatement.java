@@ -33,6 +33,11 @@ public abstract class ProxyStatement implements Statement
 
    private boolean isClosed;
    private ResultSet proxyResultSet;
+   private static ProxyFactory PROXY_FACTORY;
+
+   static {
+      PROXY_FACTORY = ProxyFactory.factory;
+   }
 
    ProxyStatement(ProxyConnection connection, Statement statement)
    {
@@ -109,7 +114,7 @@ public abstract class ProxyStatement implements Statement
    {
       connection.markCommitStateDirty();
       ResultSet resultSet = delegate.executeQuery(sql);
-      return ProxyFactory.getProxyResultSet(connection, this, resultSet);
+      return PROXY_FACTORY.getProxyResultSet(connection, this, resultSet);
    }
 
    /** {@inheritDoc} */
@@ -214,7 +219,7 @@ public abstract class ProxyStatement implements Statement
       final ResultSet resultSet = delegate.getResultSet();
       if (resultSet != null) {
          if (proxyResultSet == null || ((ProxyResultSet) proxyResultSet).delegate != resultSet) {
-            proxyResultSet = ProxyFactory.getProxyResultSet(connection, this, resultSet);
+            proxyResultSet = PROXY_FACTORY.getProxyResultSet(connection, this, resultSet);
          }
       }
       else {
@@ -229,7 +234,7 @@ public abstract class ProxyStatement implements Statement
    {
       ResultSet resultSet = delegate.getGeneratedKeys();
       if (proxyResultSet == null || ((ProxyResultSet) proxyResultSet).delegate != resultSet) {
-         proxyResultSet = ProxyFactory.getProxyResultSet(connection, this, resultSet);
+         proxyResultSet = PROXY_FACTORY.getProxyResultSet(connection, this, resultSet);
       }
       return proxyResultSet;
    }

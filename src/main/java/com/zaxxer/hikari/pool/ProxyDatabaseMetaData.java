@@ -10,6 +10,13 @@ public abstract class ProxyDatabaseMetaData implements DatabaseMetaData
 {
    protected final ProxyConnection connection;
 
+   private static ProxyFactory PROXY_FACTORY;
+
+   static {
+      PROXY_FACTORY = PROXY_FACTORY.factory;
+   }
+
+
    @SuppressWarnings("WeakerAccess")
    protected final DatabaseMetaData delegate;
 
@@ -49,9 +56,9 @@ public abstract class ProxyDatabaseMetaData implements DatabaseMetaData
       ResultSet resultSet = delegate.getProcedures(catalog, schemaPattern, procedureNamePattern);
       Statement statement = resultSet.getStatement();
       if (statement != null) {
-         statement = ProxyFactory.getProxyStatement(connection, statement);
+         statement = PROXY_FACTORY.getProxyStatement(connection, statement);
       }
-      return ProxyFactory.getProxyResultSet(connection, (ProxyStatement) statement, resultSet);
+      return PROXY_FACTORY.getProxyResultSet(connection, (ProxyStatement) statement, resultSet);
    }
 
    @Override
@@ -59,9 +66,9 @@ public abstract class ProxyDatabaseMetaData implements DatabaseMetaData
       ResultSet resultSet = delegate.getProcedureColumns(catalog, schemaPattern, procedureNamePattern, columnNamePattern);
       Statement statement = resultSet.getStatement();
       if (statement != null) {
-         statement = ProxyFactory.getProxyStatement(connection, statement);
+         statement = PROXY_FACTORY.getProxyStatement(connection, statement);
       }
-      return ProxyFactory.getProxyResultSet(connection, (ProxyStatement) statement, resultSet);
+      return PROXY_FACTORY.getProxyResultSet(connection, (ProxyStatement) statement, resultSet);
    }
 
    @Override
@@ -69,9 +76,9 @@ public abstract class ProxyDatabaseMetaData implements DatabaseMetaData
       ResultSet resultSet = delegate.getTables(catalog, schemaPattern, tableNamePattern, types);
       Statement statement = resultSet.getStatement();
       if (statement != null) {
-         statement = ProxyFactory.getProxyStatement(connection, statement);
+         statement = PROXY_FACTORY.getProxyStatement(connection, statement);
       }
-      return ProxyFactory.getProxyResultSet(connection, (ProxyStatement) statement, resultSet);
+      return PROXY_FACTORY.getProxyResultSet(connection, (ProxyStatement) statement, resultSet);
    }
 
    @Override
@@ -79,9 +86,9 @@ public abstract class ProxyDatabaseMetaData implements DatabaseMetaData
       ResultSet resultSet = delegate.getSchemas();
       Statement statement = resultSet.getStatement();
       if (statement != null) {
-         statement = ProxyFactory.getProxyStatement(connection, statement);
+         statement = PROXY_FACTORY.getProxyStatement(connection, statement);
       }
-      return ProxyFactory.getProxyResultSet(connection, (ProxyStatement) statement, resultSet);
+      return PROXY_FACTORY.getProxyResultSet(connection, (ProxyStatement) statement, resultSet);
    }
 
    @Override
@@ -89,9 +96,9 @@ public abstract class ProxyDatabaseMetaData implements DatabaseMetaData
       ResultSet resultSet = delegate.getCatalogs();
       Statement statement = resultSet.getStatement();
       if (statement != null) {
-         statement = ProxyFactory.getProxyStatement(connection, statement);
+         statement = PROXY_FACTORY.getProxyStatement(connection, statement);
       }
-      return ProxyFactory.getProxyResultSet(connection, (ProxyStatement) statement, resultSet);
+      return PROXY_FACTORY.getProxyResultSet(connection, (ProxyStatement) statement, resultSet);
    }
 
    @Override
@@ -99,9 +106,9 @@ public abstract class ProxyDatabaseMetaData implements DatabaseMetaData
       ResultSet resultSet = delegate.getTableTypes();
       Statement statement = resultSet.getStatement();
       if (statement != null) {
-         statement = ProxyFactory.getProxyStatement(connection, statement);
+         statement = PROXY_FACTORY.getProxyStatement(connection, statement);
       }
-      return ProxyFactory.getProxyResultSet(connection, (ProxyStatement) statement, resultSet);
+      return PROXY_FACTORY.getProxyResultSet(connection, (ProxyStatement) statement, resultSet);
    }
 
    @Override
@@ -109,9 +116,9 @@ public abstract class ProxyDatabaseMetaData implements DatabaseMetaData
       ResultSet resultSet = delegate.getColumns(catalog, schemaPattern, tableNamePattern, columnNamePattern);
       Statement statement = resultSet.getStatement();
       if (statement != null) {
-         statement = ProxyFactory.getProxyStatement(connection, statement);
+         statement = PROXY_FACTORY.getProxyStatement(connection, statement);
       }
-      return ProxyFactory.getProxyResultSet(connection, (ProxyStatement) statement, resultSet);
+      return PROXY_FACTORY.getProxyResultSet(connection, (ProxyStatement) statement, resultSet);
    }
 
    @Override
@@ -119,9 +126,9 @@ public abstract class ProxyDatabaseMetaData implements DatabaseMetaData
       ResultSet resultSet = delegate.getColumnPrivileges(catalog, schema, table, columnNamePattern);
       Statement statement = resultSet.getStatement();
       if (statement != null) {
-         statement = ProxyFactory.getProxyStatement(connection, statement);
+         statement = PROXY_FACTORY.getProxyStatement(connection, statement);
       }
-      return ProxyFactory.getProxyResultSet(connection, (ProxyStatement) statement, resultSet);
+      return PROXY_FACTORY.getProxyResultSet(connection, (ProxyStatement) statement, resultSet);
    }
 
    @Override
@@ -129,9 +136,9 @@ public abstract class ProxyDatabaseMetaData implements DatabaseMetaData
       ResultSet resultSet = delegate.getTablePrivileges(catalog, schemaPattern, tableNamePattern);
       Statement statement = resultSet.getStatement();
       if (statement != null) {
-         statement = ProxyFactory.getProxyStatement(connection, statement);
+         statement = PROXY_FACTORY.getProxyStatement(connection, statement);
       }
-      return ProxyFactory.getProxyResultSet(connection, (ProxyStatement) statement, resultSet);
+      return PROXY_FACTORY.getProxyResultSet(connection, (ProxyStatement) statement, resultSet);
    }
 
    @Override
@@ -139,9 +146,9 @@ public abstract class ProxyDatabaseMetaData implements DatabaseMetaData
       ResultSet resultSet = delegate.getBestRowIdentifier(catalog, schema, table, scope, nullable);
       Statement statement = resultSet.getStatement();
       if (statement != null) {
-         statement = ProxyFactory.getProxyStatement(connection, statement);
+         statement = PROXY_FACTORY.getProxyStatement(connection, statement);
       }
-      return ProxyFactory.getProxyResultSet(connection, (ProxyStatement) statement, resultSet);
+      return PROXY_FACTORY.getProxyResultSet(connection, (ProxyStatement) statement, resultSet);
    }
 
    @Override
@@ -149,9 +156,9 @@ public abstract class ProxyDatabaseMetaData implements DatabaseMetaData
       ResultSet resultSet = delegate.getVersionColumns(catalog, schema, table);
       Statement statement = resultSet.getStatement();
       if (statement != null) {
-         statement = ProxyFactory.getProxyStatement(connection, statement);
+         statement = PROXY_FACTORY.getProxyStatement(connection, statement);
       }
-      return ProxyFactory.getProxyResultSet(connection, (ProxyStatement) statement, resultSet);
+      return PROXY_FACTORY.getProxyResultSet(connection, (ProxyStatement) statement, resultSet);
    }
 
    @Override
@@ -159,9 +166,9 @@ public abstract class ProxyDatabaseMetaData implements DatabaseMetaData
       ResultSet resultSet = delegate.getPrimaryKeys(catalog, schema, table);
       Statement statement = resultSet.getStatement();
       if (statement != null) {
-         statement = ProxyFactory.getProxyStatement(connection, statement);
+         statement = PROXY_FACTORY.getProxyStatement(connection, statement);
       }
-      return ProxyFactory.getProxyResultSet(connection, (ProxyStatement) statement, resultSet);
+      return PROXY_FACTORY.getProxyResultSet(connection, (ProxyStatement) statement, resultSet);
    }
 
    @Override
@@ -169,9 +176,9 @@ public abstract class ProxyDatabaseMetaData implements DatabaseMetaData
       ResultSet resultSet = delegate.getImportedKeys(catalog, schema, table);
       Statement statement = resultSet.getStatement();
       if (statement != null) {
-         statement = ProxyFactory.getProxyStatement(connection, statement);
+         statement = PROXY_FACTORY.getProxyStatement(connection, statement);
       }
-      return ProxyFactory.getProxyResultSet(connection, (ProxyStatement) statement, resultSet);
+      return PROXY_FACTORY.getProxyResultSet(connection, (ProxyStatement) statement, resultSet);
    }
 
    @Override
@@ -179,9 +186,9 @@ public abstract class ProxyDatabaseMetaData implements DatabaseMetaData
       ResultSet resultSet = delegate.getExportedKeys(catalog, schema, table);
       Statement statement = resultSet.getStatement();
       if (statement != null) {
-         statement = ProxyFactory.getProxyStatement(connection, statement);
+         statement = PROXY_FACTORY.getProxyStatement(connection, statement);
       }
-      return ProxyFactory.getProxyResultSet(connection, (ProxyStatement) statement, resultSet);
+      return PROXY_FACTORY.getProxyResultSet(connection, (ProxyStatement) statement, resultSet);
    }
 
    @Override
@@ -189,9 +196,9 @@ public abstract class ProxyDatabaseMetaData implements DatabaseMetaData
       ResultSet resultSet = delegate.getCrossReference(parentCatalog, parentSchema, parentTable, foreignCatalog, foreignSchema, foreignTable);
       Statement statement = resultSet.getStatement();
       if (statement != null) {
-         statement = ProxyFactory.getProxyStatement(connection, statement);
+         statement = PROXY_FACTORY.getProxyStatement(connection, statement);
       }
-      return ProxyFactory.getProxyResultSet(connection, (ProxyStatement) statement, resultSet);
+      return PROXY_FACTORY.getProxyResultSet(connection, (ProxyStatement) statement, resultSet);
    }
 
    @Override
@@ -199,9 +206,9 @@ public abstract class ProxyDatabaseMetaData implements DatabaseMetaData
       ResultSet resultSet = delegate.getTypeInfo();
       Statement statement = resultSet.getStatement();
       if (statement != null) {
-         statement = ProxyFactory.getProxyStatement(connection, statement);
+         statement = PROXY_FACTORY.getProxyStatement(connection, statement);
       }
-      return ProxyFactory.getProxyResultSet(connection, (ProxyStatement) statement, resultSet);
+      return PROXY_FACTORY.getProxyResultSet(connection, (ProxyStatement) statement, resultSet);
    }
 
    @Override
@@ -209,9 +216,9 @@ public abstract class ProxyDatabaseMetaData implements DatabaseMetaData
       ResultSet resultSet = delegate.getIndexInfo(catalog, schema, table, unique, approximate);
       Statement statement = resultSet.getStatement();
       if (statement != null) {
-         statement = ProxyFactory.getProxyStatement(connection, statement);
+         statement = PROXY_FACTORY.getProxyStatement(connection, statement);
       }
-      return ProxyFactory.getProxyResultSet(connection, (ProxyStatement) statement, resultSet);
+      return PROXY_FACTORY.getProxyResultSet(connection, (ProxyStatement) statement, resultSet);
    }
 
    @Override
@@ -219,9 +226,9 @@ public abstract class ProxyDatabaseMetaData implements DatabaseMetaData
       ResultSet resultSet = delegate.getUDTs(catalog, schemaPattern, typeNamePattern, types);
       Statement statement = resultSet.getStatement();
       if (statement != null) {
-         statement = ProxyFactory.getProxyStatement(connection, statement);
+         statement = PROXY_FACTORY.getProxyStatement(connection, statement);
       }
-      return ProxyFactory.getProxyResultSet(connection, (ProxyStatement) statement, resultSet);
+      return PROXY_FACTORY.getProxyResultSet(connection, (ProxyStatement) statement, resultSet);
    }
 
    @Override
@@ -229,9 +236,9 @@ public abstract class ProxyDatabaseMetaData implements DatabaseMetaData
       ResultSet resultSet = delegate.getSuperTypes(catalog, schemaPattern, typeNamePattern);
       Statement statement = resultSet.getStatement();
       if (statement != null) {
-         statement = ProxyFactory.getProxyStatement(connection, statement);
+         statement = PROXY_FACTORY.getProxyStatement(connection, statement);
       }
-      return ProxyFactory.getProxyResultSet(connection, (ProxyStatement) statement, resultSet);
+      return PROXY_FACTORY.getProxyResultSet(connection, (ProxyStatement) statement, resultSet);
    }
 
    @Override
@@ -239,9 +246,9 @@ public abstract class ProxyDatabaseMetaData implements DatabaseMetaData
       ResultSet resultSet = delegate.getSuperTables(catalog, schemaPattern, tableNamePattern);
       Statement statement = resultSet.getStatement();
       if (statement != null) {
-         statement = ProxyFactory.getProxyStatement(connection, statement);
+         statement = PROXY_FACTORY.getProxyStatement(connection, statement);
       }
-      return ProxyFactory.getProxyResultSet(connection, (ProxyStatement) statement, resultSet);
+      return PROXY_FACTORY.getProxyResultSet(connection, (ProxyStatement) statement, resultSet);
    }
 
    @Override
@@ -249,9 +256,9 @@ public abstract class ProxyDatabaseMetaData implements DatabaseMetaData
       ResultSet resultSet = delegate.getAttributes(catalog, schemaPattern, typeNamePattern, attributeNamePattern);
       Statement statement = resultSet.getStatement();
       if (statement != null) {
-         statement = ProxyFactory.getProxyStatement(connection, statement);
+         statement = PROXY_FACTORY.getProxyStatement(connection, statement);
       }
-      return ProxyFactory.getProxyResultSet(connection, (ProxyStatement) statement, resultSet);
+      return PROXY_FACTORY.getProxyResultSet(connection, (ProxyStatement) statement, resultSet);
    }
 
    @Override
@@ -259,9 +266,9 @@ public abstract class ProxyDatabaseMetaData implements DatabaseMetaData
       ResultSet resultSet = delegate.getSchemas(catalog, schemaPattern);
       Statement statement = resultSet.getStatement();
       if (statement != null) {
-         statement = ProxyFactory.getProxyStatement(connection, statement);
+         statement = PROXY_FACTORY.getProxyStatement(connection, statement);
       }
-      return ProxyFactory.getProxyResultSet(connection, (ProxyStatement) statement, resultSet);
+      return PROXY_FACTORY.getProxyResultSet(connection, (ProxyStatement) statement, resultSet);
    }
 
    @Override
@@ -269,9 +276,9 @@ public abstract class ProxyDatabaseMetaData implements DatabaseMetaData
       ResultSet resultSet = delegate.getClientInfoProperties();
       Statement statement = resultSet.getStatement();
       if (statement != null) {
-         statement = ProxyFactory.getProxyStatement(connection, statement);
+         statement = PROXY_FACTORY.getProxyStatement(connection, statement);
       }
-      return ProxyFactory.getProxyResultSet(connection, (ProxyStatement) statement, resultSet);
+      return PROXY_FACTORY.getProxyResultSet(connection, (ProxyStatement) statement, resultSet);
    }
 
    @Override
@@ -279,9 +286,9 @@ public abstract class ProxyDatabaseMetaData implements DatabaseMetaData
       ResultSet resultSet = delegate.getFunctions(catalog, schemaPattern, functionNamePattern);
       Statement statement = resultSet.getStatement();
       if (statement != null) {
-         statement = ProxyFactory.getProxyStatement(connection, statement);
+         statement = PROXY_FACTORY.getProxyStatement(connection, statement);
       }
-      return ProxyFactory.getProxyResultSet(connection, (ProxyStatement) statement, resultSet);
+      return PROXY_FACTORY.getProxyResultSet(connection, (ProxyStatement) statement, resultSet);
    }
 
    @Override
@@ -289,9 +296,9 @@ public abstract class ProxyDatabaseMetaData implements DatabaseMetaData
       ResultSet resultSet = delegate.getFunctionColumns(catalog, schemaPattern, functionNamePattern, columnNamePattern);
       Statement statement = resultSet.getStatement();
       if (statement != null) {
-         statement = ProxyFactory.getProxyStatement(connection, statement);
+         statement = PROXY_FACTORY.getProxyStatement(connection, statement);
       }
-      return ProxyFactory.getProxyResultSet(connection, (ProxyStatement) statement, resultSet);
+      return PROXY_FACTORY.getProxyResultSet(connection, (ProxyStatement) statement, resultSet);
    }
 
    @Override
@@ -299,9 +306,9 @@ public abstract class ProxyDatabaseMetaData implements DatabaseMetaData
       ResultSet resultSet = delegate.getPseudoColumns(catalog, schemaPattern, tableNamePattern, columnNamePattern);
       Statement statement = resultSet.getStatement();
       if (statement != null) {
-         statement = ProxyFactory.getProxyStatement(connection, statement);
+         statement = PROXY_FACTORY.getProxyStatement(connection, statement);
       }
-      return ProxyFactory.getProxyResultSet(connection, (ProxyStatement) statement, resultSet);
+      return PROXY_FACTORY.getProxyResultSet(connection, (ProxyStatement) statement, resultSet);
    }
 
    /** {@inheritDoc} */

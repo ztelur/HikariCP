@@ -37,6 +37,7 @@ final class PoolEntry implements IConcurrentBagEntry
 {
    private static final Logger LOGGER = LoggerFactory.getLogger(PoolEntry.class);
    private static final AtomicIntegerFieldUpdater<PoolEntry> stateUpdater;
+   private static ProxyFactory PROXY_FACTORY;
 
    Connection connection;
    long lastAccessed;
@@ -57,6 +58,8 @@ final class PoolEntry implements IConcurrentBagEntry
    static
    {
       stateUpdater = AtomicIntegerFieldUpdater.newUpdater(PoolEntry.class, "state");
+      PROXY_FACTORY = ProxyFactory.factory;
+
    }
 
    PoolEntry(final Connection connection, final PoolBase pool, final boolean isReadOnly, final boolean isAutoCommit)
@@ -94,7 +97,7 @@ final class PoolEntry implements IConcurrentBagEntry
 
    Connection createProxyConnection(final ProxyLeakTask leakTask, final long now)
    {
-      return ProxyFactory.getProxyConnection(this, connection, openStatements, leakTask, now, isReadOnly, isAutoCommit);
+      return PROXY_FACTORY.getProxyConnection(this, connection, openStatements, leakTask, now, isReadOnly, isAutoCommit);
    }
 
    void resetConnectionState(final ProxyConnection proxyConnection, final int dirtyBits) throws SQLException
