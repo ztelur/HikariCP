@@ -333,6 +333,9 @@ public final class HikariPool extends PoolBase implements HikariPoolMXBean, IBag
    @Override
    public void addBagItem(final int waiting)
    {
+      /**
+       * 判断是否应该添加
+       */
       final boolean shouldAdd = waiting - addConnectionQueue.size() >= 0; // Yes, >= is intentional.
       if (shouldAdd) {
          addConnectionExecutor.submit(poolEntryCreator);
@@ -717,6 +720,9 @@ public final class HikariPool extends PoolBase implements HikariPoolMXBean, IBag
          long sleepBackoff = 250L;
          while (poolState == POOL_NORMAL && shouldCreateAnotherConnection()) {
             final PoolEntry poolEntry = createPoolEntry();
+            /**
+             * 如果不为null，则加入
+             */
             if (poolEntry != null) {
                connectionBag.add(poolEntry);
                logger.debug("{} - Added connection {}", poolName, poolEntry.connection);
@@ -727,6 +733,9 @@ public final class HikariPool extends PoolBase implements HikariPoolMXBean, IBag
             }
 
             // failed to get connection from db, sleep and retry
+            /**
+             * 未从 db 中获取 connection，则 sleep 等待一些时间
+             */
             quietlySleep(sleepBackoff);
             sleepBackoff = Math.min(SECONDS.toMillis(10), Math.min(connectionTimeout, (long) (sleepBackoff * 1.5)));
          }

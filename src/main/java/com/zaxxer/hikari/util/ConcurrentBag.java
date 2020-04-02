@@ -126,35 +126,62 @@ public class ConcurrentBag<T extends IConcurrentBagEntry> implements AutoCloseab
    public T borrow(long timeout, final TimeUnit timeUnit) throws InterruptedException
    {
       // Try the thread-local list first
+      /**
+       * 1 先获取线程本身的 entry 数据列表
+       */
       final List<Object> list = threadList.get();
+      /**
+       * 2 从后往前依次取出 entry
+       */
       for (int i = list.size() - 1; i >= 0; i--) {
          final Object entry = list.remove(i);
          @SuppressWarnings("unchecked")
-
+         /**
+          * 判断是否为虚引用，获取entry值，判断是否为null，并cas设置in_use状态，如果成功则直接返回
+          */
          final T bagEntry = weakThreadLocals ? ((WeakReference<T>) entry).get() : (T) entry;
          if (bagEntry != null && bagEntry.compareAndSet(STATE_NOT_IN_USE, STATE_IN_USE)) {
             return bagEntry;
          }
       }
-
+      /**
+       * 3 线程本地找不到，则 waiters 加一
+       */
       // Otherwise, scan the shared list ... then poll the handoff queue
       final int waiting = waiters.incrementAndGet();
+      /**
+       * 遍历 sharedList cas设置为in_user
+       */
       try {
          for (T bagEntry : sharedList) {
             if (bagEntry.compareAndSet(STATE_NOT_IN_USE, STATE_IN_USE)) {
                // If we may have stolen another waiter's connection, request another bag add.
+               /**
+                * 成功
+                */
                if (waiting > 1) {
+                  /**
+                   *  大于一，则表明还有其他线程获取entry，我们自身没有生成entry,偷了其他人的， 则为它生成一个entry
+                   */
                   listener.addBagItem(waiting - 1);
                }
+               /**
+                * 返回
+                */
                return bagEntry;
             }
          }
-
+         /**
+          * 如果一个都没有获取，则生成一个entry
+          */
          listener.addBagItem(waiting);
 
          timeout = timeUnit.toNanos(timeout);
          do {
             final long start = currentTime();
+            /**
+             * 等待新的entry生成，通知handoffQueue
+             */
             final T bagEntry = handoffQueue.poll(timeout, NANOSECONDS);
             if (bagEntry == null || bagEntry.compareAndSet(STATE_NOT_IN_USE, STATE_IN_USE)) {
                return bagEntry;
@@ -162,7 +189,9 @@ public class ConcurrentBag<T extends IConcurrentBagEntry> implements AutoCloseab
 
             timeout -= elapsedNanos(start);
          } while (timeout > 10_000);
-
+         /**
+          * 超时 返回 null
+          */
          return null;
       }
       finally {
@@ -182,7 +211,9 @@ public class ConcurrentBag<T extends IConcurrentBagEntry> implements AutoCloseab
    public void requite(final T bagEntry)
    {
       bagEntry.setState(STATE_NOT_IN_USE);
-
+      /**
+       * 直接和需要的进行对接
+       */
       for (int i = 0; waiters.get() > 0; i++) {
          if (bagEntry.getState() != STATE_NOT_IN_USE || handoffQueue.offer(bagEntry)) {
             return;
@@ -212,10 +243,15 @@ public class ConcurrentBag<T extends IConcurrentBagEntry> implements AutoCloseab
          LOGGER.info("ConcurrentBag has been closed, ignoring add()");
          throw new IllegalStateException("ConcurrentBag has been closed, ignoring add()");
       }
-
+      /**
+       * 现在 total 中添加
+       */
       sharedList.add(bagEntry);
 
       // spin until a thread takes it or none are waiting
+      /**
+       * 一直循环直到wariters为0，或者 entry 状态已经不是not_in_use 或者offer有正常返回位置
+       */
       while (waiters.get() > 0 && bagEntry.getState() == STATE_NOT_IN_USE && !handoffQueue.offer(bagEntry)) {
          yield();
       }
